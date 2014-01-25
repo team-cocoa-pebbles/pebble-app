@@ -1,0 +1,17 @@
+{
+  "uuid": "aa1e1853-8331-4344-974a-82434d0e32df",
+  "shortName": "kiwi",
+  "longName": "kiwi",
+  "companyName": "MakeAwesomeHappen",
+  "versionCode": 1,
+  "versionLabel": "1.0.0",
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": []
+  }
+}
