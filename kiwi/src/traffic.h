@@ -7,3 +7,4 @@ void traffic_show(void);
 void traffic_hide(void);
 
 void set_traffic_text(char*);
+char* get_traffic_text();

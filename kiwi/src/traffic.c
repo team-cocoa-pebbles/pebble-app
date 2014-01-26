@@ -11,13 +11,14 @@ static int height = 84;
 static void cardLayer_update_callback(Layer* me, GContext* ctx) {
   graphics_context_set_text_color(ctx, GColorBlack);
   graphics_draw_text(ctx,trafficText,fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21),
-      GRect(0, height, bounds.size.w, 100),
+      GRect(0, height-30, bounds.size.w, 100),
       GTextOverflowModeWordWrap,
       GTextAlignmentCenter,
       NULL);
 }
 
 static void window_load(Window *window) {
+  trafficText = "Accident on the I110";
   Layer *window_layer = window_get_root_layer(window);
   bounds = layer_get_bounds(window_layer);
 
@@ -51,17 +52,10 @@ static void click_handler(ClickRecognizerRef recognizer, Window *window) {
   animation_set_duration((Animation*) prop_animation, 400);
   switch (click_recognizer_get_button_id(recognizer)) {
     case BUTTON_ID_UP:
-    to_rect = GRect(0, 0, bounds.size.w, bounds.size.h);
-    prop_animation = property_animation_create_layer_frame(layer, NULL, &to_rect);
-      animation_set_curve((Animation*) prop_animation, AnimationCurveEaseOut);
-        animation_schedule((Animation*) prop_animation);
+
       break;
 
     case BUTTON_ID_DOWN:
-    to_rect = GRect(0, height, bounds.size.w, bounds.size.h);
-    prop_animation = property_animation_create_layer_frame(layer, NULL, &to_rect);
-      animation_set_curve((Animation*) prop_animation, AnimationCurveEaseIn);
-        animation_schedule((Animation*) prop_animation);
       break;
 
     case BUTTON_ID_SELECT:
@@ -130,5 +124,12 @@ void traffic_show(void) {
 
 void set_traffic_text(char* trafficInput) {
   trafficText = trafficInput;
+}
+
+char* get_traffic_text() {
+  if (trafficText != NULL)
+    return trafficText;
+  else
+    return "How long will it take to get home?";
 }
 

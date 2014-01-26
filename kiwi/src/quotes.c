@@ -11,13 +11,14 @@ static char *quoteText;
 static void cardLayer_update_callback(Layer* me, GContext* ctx) {
   graphics_context_set_text_color(ctx, GColorBlack);
   graphics_draw_text(ctx,quoteText,fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21),
-      GRect(0, height, bounds.size.w, 100),
+      GRect(0, height-30, bounds.size.w, 100),
       GTextOverflowModeWordWrap,
       GTextAlignmentCenter,
       NULL);
 }
 
-static void window_load(Window *window) {
+static void window_load(Window *window) {\
+  quoteText = "This is the default quote";
   Layer *window_layer = window_get_root_layer(window);
   bounds = layer_get_bounds(window_layer);
 
@@ -106,3 +107,9 @@ void set_quote_text(char* quoteInput) {
   quoteText = quoteInput;
 }
 
+char* get_quote_text() {
+  if (quoteText != NULL)
+    return quoteText;
+  else
+    return "Some Inspiration";
+}

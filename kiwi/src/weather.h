@@ -5,3 +5,5 @@ void weather_deinit(void);
 void weather_show(void);
 void set_weather_type_text(char*);
 void set_temperature_text(char*);
+char* get_weather_type_text();
+char* get_temperature_text();

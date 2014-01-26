@@ -6,7 +6,7 @@
 #include "weather.h"
 #include "quotes.h"
 
-#define NUM_APPS 4
+#define NUM_APPS 3
 
 
 
@@ -192,13 +192,9 @@ static void window_load(Window *window) {
 
   names[0] = "Weather";
   names[1] = "Traffic";
-  names[2] = "Twitter";
-  names[3] = "Sports";
+  names[2] = "Quotes";
 
-  descriptions[0] = "Wut dat weather be doe?";
-  descriptions[1] = "Move out my way foo!";
-  descriptions[2] = "#hashtag";
-  descriptions[3] = "I go HARD in the paint";
+
 
   //-------
   //AppSync
@@ -270,6 +266,9 @@ static void click_handler(ClickRecognizerRef recognizer, Window *window) {
 	      case 1:
 	       traffic_show();
 	       break;
+         case 2:
+          quotes_show();
+          break;
 	     default:
 	       break;
       }
@@ -283,6 +282,9 @@ static void click_handler(ClickRecognizerRef recognizer, Window *window) {
         case 1:
          traffic_show();
          break;
+         case 2:
+          quotes_show();
+          break;
        default:
          break;
       } 
@@ -324,11 +326,19 @@ void in_dropped_handler(AppMessageResult reason, void *context) {
 }
 //---------*/
 
+static void window_appear(Window *window) {
+  // When the game window appears, reset the game
+  descriptions[0] = get_weather_type_text();
+  descriptions[1] = get_traffic_text();
+  descriptions[2] = get_quote_text();
+}
+
 static void init(void) {
   hashtag_init();
   sports_init();
   weather_init();
   traffic_init();
+  quotes_init();
 
   /*app_message_register_inbox_received(in_received_handler);
   app_message_register_inbox_dropped(in_dropped_handler);
@@ -345,6 +355,7 @@ static void init(void) {
   window_set_window_handlers(window, (WindowHandlers) {
       .load = window_load,
 	.unload = window_unload,
+  .appear = window_appear
 	});
 
   const bool animated = true;
