@@ -1,5 +1,5 @@
 #include <pebble.h>
-#include "hashtag.h"
+#include "traffic.h"
 
 static Window* window;
 static PropertyAnimation *prop_animation;
@@ -10,7 +10,7 @@ static int height = 84;
 static void cardLayer_update_callback(Layer* me, GContext* ctx) {
   graphics_context_set_text_color(ctx, GColorBlack);
   graphics_draw_line(ctx, GPoint(0, height), GPoint(bounds.size.w, height));
-  graphics_draw_text(ctx,"#hashtag",fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21),
+  graphics_draw_text(ctx,"#traffic",fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21),
       GRect(0, height, bounds.size.w, 100),
       GTextOverflowModeWordWrap,
       GTextAlignmentCenter,
@@ -54,18 +54,21 @@ static void click_handler(ClickRecognizerRef recognizer, Window *window) {
     to_rect = GRect(0, 0, bounds.size.w, bounds.size.h);
     prop_animation = property_animation_create_layer_frame(layer, NULL, &to_rect);
       animation_set_curve((Animation*) prop_animation, AnimationCurveEaseOut);
+        animation_schedule((Animation*) prop_animation);
       break;
 
     case BUTTON_ID_DOWN:
     to_rect = GRect(0, height, bounds.size.w, bounds.size.h);
     prop_animation = property_animation_create_layer_frame(layer, NULL, &to_rect);
       animation_set_curve((Animation*) prop_animation, AnimationCurveEaseIn);
+        animation_schedule((Animation*) prop_animation);
       break;
 
-    default:
     case BUTTON_ID_SELECT:
       //animation_set_curve((Animation*) prop_animation, AnimationCurveEaseInOut);
       break;
+ default:
+ break;
   }
 
   /*
@@ -85,7 +88,6 @@ static void click_handler(ClickRecognizerRef recognizer, Window *window) {
     .started = (AnimationStartedHandler) animation_started,
     .stopped = (AnimationStoppedHandler) animation_stopped,
   }, NULL  callback data /);*/
-  animation_schedule((Animation*) prop_animation);
 }
 static void config_provider(Window *window) {
   window_single_click_subscribe(BUTTON_ID_UP, (ClickHandler) click_handler);
@@ -96,10 +98,10 @@ static void config_provider(Window *window) {
 
 
 static void window_unload(Window *window) {
-  layer_destroy(cardLayer);
+
 }
 
-void hashtag_init(void) {
+void traffic_init(void) {
   window = window_create();
   Layer* window_layer = window_get_root_layer(window);
   bounds = layer_get_bounds(window_layer);
@@ -114,10 +116,15 @@ void hashtag_init(void) {
   });
 }
 
-void hashtag_deinit(void) {
-  window_destroy(window);
+void traffic_deinit(void) {
+    window_destroy(window);
+      layer_destroy(cardLayer);
+  destroy_property_animation(&prop_animation);
+
+  window_stack_remove(window, false);
 }
 
-void hashtag_show(void) {
-	window_stack_push(window, true);
+void traffic_show(void) {
+	window_stack_push(window, false);
 }
+
