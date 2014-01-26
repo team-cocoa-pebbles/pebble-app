@@ -209,15 +209,30 @@ static void click_handler(ClickRecognizerRef recognizer, Window *window) {
   case BUTTON_ID_SELECT:
     if (onTop)
       {
-	switch(top)
-          {
-	  case 1:
-	    traffic_show();
-	    break;
-	  default:
-	    break;
-          }
+	     switch(top){
+        case 0:
+          weather_show();
+          break;
+	      case 1:
+	       traffic_show();
+	       break;
+	     default:
+	       break;
       }
+    }
+    else
+    {
+      switch(bottom){
+        case 0:
+          weather_show();
+          break;
+        case 1:
+         traffic_show();
+         break;
+       default:
+         break;
+      } 
+    }
     break;
 
   default:
