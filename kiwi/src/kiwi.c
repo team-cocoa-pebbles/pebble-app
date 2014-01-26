@@ -41,11 +41,17 @@ static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tup
   switch (key) {
     case WEATHER_TYPE_KEY:
       APP_LOG(APP_LOG_LEVEL_INFO, "GOT WEATHER: %s", new_tuple->value->cstring);
-      set_weather_type_text(new_tuple->value->cstring);
+      int len = strlen(new_tuple->value->cstring);
+      char *buf = malloc(sizeof(char) * len);
+      strncpy(buf, new_tuple->value->cstring, len);
+      set_weather_type_text(buf);
       break;
     case TEMPERATURE_KEY:
       APP_LOG(APP_LOG_LEVEL_INFO, "GOT TEMPERATURE: %s", new_tuple->value->cstring);
-      set_temperature_text(new_tuple->value->cstring);
+      int len = strlen(new_tuple->value->cstring);
+      char *buf = malloc(sizeof(char) * len);
+      strncpy(buf, new_tuple->value->cstring, len);
+      set_temperature_text(buf);
       break;
     case TRAFFIC_KEY:
       APP_LOG(APP_LOG_LEVEL_INFO, "GOT TRAFFIC");
