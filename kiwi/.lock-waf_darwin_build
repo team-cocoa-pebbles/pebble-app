@@ -1,8 +1,0 @@
-argv = ['/Users/mlbautis/pebble-dev/PebbleSDK-2.0-BETA7/Pebble/waf', 'configure', 'build']
-environ = {'TERM_SESSION_ID': '5C6EBAE0-2BF3-4DB8-970F-FD5EF20C77BD', 'SSH_AUTH_SOCK': '/tmp/launch-TgMrsz/Listeners', 'VERSIONER_PYTHON_PREFER_32_BIT': 'no', 'TERM_PROGRAM_VERSION': '309', 'SHELL': '/bin/bash', 'LOGNAME': 'mlbautis', 'USER': 'mlbautis', 'HOME': '/Users/mlbautis', 'PATH': '/Users/mlbautis/pebble-dev/PebbleSDK-2.0-BETA7/arm-cs-tools/bin:/Users/mlbautis/pebble-dev/PebbleSDK-2.0-BETA7/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin', 'TMPDIR': '/var/folders/kv/63ppfzrd24v822hgfvpz00f40000gp/T/', 'TERM_PROGRAM': 'Apple_Terminal', 'LANG': 'en_US.UTF-8', 'TERM': 'xterm-256color', 'Apple_PubSub_Socket_Render': '/tmp/launch-XF9ipe/Render', 'VERSIONER_PYTHON_VERSION': '2.7', 'SHLVL': '2', '__CF_USER_TEXT_ENCODING': '0x1F6:0:0', 'Apple_Ubiquity_Message': '/tmp/launch-CAwnMq/Apple_Ubiquity_Message', 'PWD': '/Users/mlbautis/pebble-app/kiwi', '_': '/Users/mlbautis/pebble-dev/PebbleSDK-2.0-BETA7/Pebble/waf', 'COMMAND_MODE': 'unix2003'}
-files = ['/Users/mlbautis/pebble-app/kiwi/wscript']
-hash = 4672844372416070989
-options = {'files': '', 'jobs': 4, 'verbose': 0, 'nocache': False, 'progress_bar': 0, 'timestamp': None, 'distcheck_args': None, 'top': '', 'destdir': '', 'keep': 0, 'zones': '', 'debug': False, 'prefix': '/usr/local/', 'download': False, 'force': False, 'targets': '', 'out': ''}
-out_dir = '/Users/mlbautis/pebble-app/kiwi/build'
-run_dir = '/Users/mlbautis/pebble-app/kiwi'
-top_dir = '/Users/mlbautis/pebble-app/kiwi'

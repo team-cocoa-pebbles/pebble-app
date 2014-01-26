@@ -1,7 +1,7 @@
 #include <pebble.h>
 #include "sports.h"
 
-int score;
+static int score;
 
 static struct SportsUi {
   Window *window;
