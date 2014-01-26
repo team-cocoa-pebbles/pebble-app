@@ -11,7 +11,6 @@
 static Window *window;
 static MenuLayer *menu_layer;
 static InverterLayer *inv_layer;
-static TextLayer *text_layer;
 
 static char* names[NUM_APPS];
 static char* descriptions[NUM_APPS];
@@ -39,15 +38,23 @@ static void sync_error_callback(DictionaryResult dict_error, AppMessageResult ap
 
 
 static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tuple, const Tuple* old_tuple, void* context) {
+  int len;
+  char *buf;
+
   switch (key) {
     case WEATHER_TYPE_KEY:
       APP_LOG(APP_LOG_LEVEL_INFO, "GOT WEATHER: %s", new_tuple->value->cstring);
-      set_weather_type_text(new_tuple->value->cstring);
-
+      len = strlen(new_tuple->value->cstring) + 1;
+      buf = malloc(len * sizeof(char));
+      strncpy(buf, new_tuple->value->cstring, len);
+      set_weather_type_text(buf);
       break;
     case TEMPERATURE_KEY:
       APP_LOG(APP_LOG_LEVEL_INFO, "GOT TEMPERATURE: %s", new_tuple->value->cstring);
-      set_temperature_text(new_tuple->value->cstring);
+      len = strlen(new_tuple->value->cstring) + 1;
+      buf = malloc(len * sizeof(char));
+      strncpy(buf, new_tuple->value->cstring, len);
+      set_temperature_text(buf);
       break;
     case TRAFFIC_KEY:
       APP_LOG(APP_LOG_LEVEL_INFO, "GOT TRAFFIC");
@@ -76,7 +83,7 @@ static int16_t menu_get_header_height_callback(MenuLayer *menu_layer, uint16_t s
 
 static int16_t menu_get_cell_height_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *data) {
   // This is a define provided in pebble.h that you may use for the default height
-  return 75;
+  return 78;
 }
 
 static void menu_draw_header_callback(GContext* ctx, const Layer *cell_layer, uint16_t section_index, void *data) {
