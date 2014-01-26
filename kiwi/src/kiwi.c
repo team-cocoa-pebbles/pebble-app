@@ -39,10 +39,10 @@ static void sync_error_callback(DictionaryResult dict_error, AppMessageResult ap
 static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tuple, const Tuple* old_tuple, void* context) {
   switch (key) {
     case WEATHER_KEY:
-      APP_LOG(APP_LOG_LEVEL_INFO, "GOT WEATHER: %d", new_tuple->value->cstring);
+      APP_LOG(APP_LOG_LEVEL_INFO, "GOT WEATHER: %s", new_tuple->value->cstring);
       break;
     case TEMPERATURE_KEY:
-      APP_LOG(APP_LOG_LEVEL_INFO, "GOT TEMPERATURE: %d", new_tuple->value->cstring);
+      APP_LOG(APP_LOG_LEVEL_INFO, "GOT TEMPERATURE: %s", new_tuple->value->cstring);
       break;
     default:
       APP_LOG(APP_LOG_LEVEL_INFO, "Unknown Key Received: %" PRIu32, key);
@@ -78,23 +78,23 @@ static void menu_draw_header_callback(GContext* ctx, const Layer *cell_layer, ui
 
 static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuIndex *cell_index, void *data) {
   // Determine which section we're going to draw in
-   // Use the row to specify which item we'll draw
+  // Use the row to specify which item we'll draw
   switch (cell_index->row) {
-    case 0:          // This is a basic menu item with a title and subtitle
-      menu_cell_basic_draw(ctx, cell_layer, names[top], descriptions[top], NULL);
-       break;
+  case 0:          // This is a basic menu item with a title and subtitle
+    menu_cell_basic_draw(ctx, cell_layer, names[top], descriptions[top], NULL);
+    break;
 
-    case 1:
-      // This is a basic menu icon with a cycling icon
-      menu_cell_basic_draw(ctx, cell_layer, names[bottom], descriptions[bottom], NULL);          
-      break;
+  case 1:
+    // This is a basic menu icon with a cycling icon
+    menu_cell_basic_draw(ctx, cell_layer, names[bottom], descriptions[bottom], NULL);          
+    break;
 
   }
 }
 
 void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *data) {
   // Use the row to specify which item will receive the select action
-/*  switch (cell_index->row) {
+  /*  switch (cell_index->row) {
     // This is the menu item with the cycling icon
 
 
@@ -105,22 +105,22 @@ void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *da
       layer_mark_dirty(menu_layer_get_layer(menu_layer));
       break;
   }
-*/
-    switch (cell_index->row)
+  */
+  switch (cell_index->row)
     {
-      case 0:
-	APP_LOG(APP_LOG_LEVEL_INFO, "Hashtag");
-        vibes_short_pulse();
-        hashtag_show();
-        break;
-      case 1:
-	APP_LOG(APP_LOG_LEVEL_INFO, "Sports");
-        sports_show();
-        break;
-      case 2:
-	APP_LOG(APP_LOG_LEVEL_INFO, "Weather");
-        weather_show();
-        break;
+    case 0:
+      APP_LOG(APP_LOG_LEVEL_INFO, "Hashtag");
+      vibes_short_pulse();
+      hashtag_show();
+      break;
+    case 1:
+      APP_LOG(APP_LOG_LEVEL_INFO, "Sports");
+      sports_show();
+      break;
+    case 2:
+      APP_LOG(APP_LOG_LEVEL_INFO, "Weather");
+      weather_show();
+      break;
     }
 }
 
@@ -153,22 +153,22 @@ static void window_load(Window *window) {
     TupletInteger(TEMPERATURE_KEY, (int8_t) 1)
   };
   app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values, ARRAY_LENGTH(initial_values),
-      sync_tuple_changed_callback, sync_error_callback, NULL);
+		sync_tuple_changed_callback, sync_error_callback, NULL);
   //-------
 
   menu_layer = menu_layer_create(bounds);
 
   menu_layer_set_callbacks(menu_layer,NULL, (MenuLayerCallbacks) {
-    .get_num_sections = menu_get_num_sections_callback,
-    .get_num_rows = menu_get_num_rows_callback,
-    .get_header_height = menu_get_header_height_callback,
-    .get_cell_height = menu_get_cell_height_callback,
-    .draw_header = menu_draw_header_callback,
-    .draw_row = menu_draw_row_callback,
-    .select_click = menu_select_callback,
-  });
+      .get_num_sections = menu_get_num_sections_callback,
+	.get_num_rows = menu_get_num_rows_callback,
+	.get_header_height = menu_get_header_height_callback,
+	.get_cell_height = menu_get_cell_height_callback,
+	.draw_header = menu_draw_header_callback,
+	.draw_row = menu_draw_row_callback,
+	.select_click = menu_select_callback,
+	});
 
-   // menu_layer_set_click_config_onto_window(menu_layer, window);
+  // menu_layer_set_click_config_onto_window(menu_layer, window);
 
   // Add it to the window for display
   layer_add_child(window_layer, menu_layer_get_layer(menu_layer));
@@ -184,44 +184,44 @@ static void window_unload(Window *window) {
 
 static void click_handler(ClickRecognizerRef recognizer, Window *window) {
   switch (click_recognizer_get_button_id(recognizer)) {
-    case BUTTON_ID_UP:
-      if (!onTop)
+  case BUTTON_ID_UP:
+    if (!onTop)
       {
         layer_set_hidden((Layer*)inv_layer,true);
         onTop = true;
       }
-      else
-        top = (top + 1) % NUM_APPS;
-      layer_mark_dirty(menu_layer_get_layer(menu_layer));
-      break;
+    else
+      top = (top + 1) % NUM_APPS;
+    layer_mark_dirty(menu_layer_get_layer(menu_layer));
+    break;
 
-    case BUTTON_ID_DOWN:
-      if (onTop)
+  case BUTTON_ID_DOWN:
+    if (onTop)
       {
         layer_set_hidden((Layer*)inv_layer,false);
         onTop = false;
       }
-      else
-        bottom = (bottom + 1) % NUM_APPS;
-      layer_mark_dirty(menu_layer_get_layer(menu_layer));
-      break;
+    else
+      bottom = (bottom + 1) % NUM_APPS;
+    layer_mark_dirty(menu_layer_get_layer(menu_layer));
+    break;
 
-    case BUTTON_ID_SELECT:
-        if (onTop)
-        {
-          switch(top)
+  case BUTTON_ID_SELECT:
+    if (onTop)
+      {
+	switch(top)
           {
-            case 1:
-              traffic_show();
-              break;
-            default:
-              break;
+	  case 1:
+	    traffic_show();
+	    break;
+	  default:
+	    break;
           }
-        }
-      break;
+      }
+    break;
 
-    default:
-      break;
+  default:
+    break;
   }
 }
 
@@ -274,9 +274,9 @@ static void init(void) {
   window = window_create();
   window_set_click_config_provider(window, (ClickConfigProvider) config_provider);
   window_set_window_handlers(window, (WindowHandlers) {
-    .load = window_load,
-    .unload = window_unload,
-  });
+      .load = window_load,
+	.unload = window_unload,
+	});
 
   const bool animated = true;
   window_stack_push(window, animated);
