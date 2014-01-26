@@ -119,7 +119,7 @@ static int16_t menu_get_header_height_callback(MenuLayer *menu_layer, uint16_t s
 
 static int16_t menu_get_cell_height_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *data) {
   // This is a define provided in pebble.h that you may use for the default height
-  return 75;
+  return 78;
 }
 
 static void menu_draw_header_callback(GContext* ctx, const Layer *cell_layer, uint16_t section_index, void *data) {
@@ -260,15 +260,30 @@ static void click_handler(ClickRecognizerRef recognizer, Window *window) {
   case BUTTON_ID_SELECT:
     if (onTop)
       {
-	switch(top)
-          {
-	  case 1:
-	    traffic_show();
-	    break;
-	  default:
-	    break;
-          }
+	     switch(top){
+        case 0:
+          weather_show();
+          break;
+	      case 1:
+	       traffic_show();
+	       break;
+	     default:
+	       break;
       }
+    }
+    else
+    {
+      switch(bottom){
+        case 0:
+          weather_show();
+          break;
+        case 1:
+         traffic_show();
+         break;
+       default:
+         break;
+      } 
+    }
     break;
 
   default:
