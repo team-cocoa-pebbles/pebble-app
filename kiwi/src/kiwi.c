@@ -11,6 +11,7 @@
 static Window *window;
 static MenuLayer *menu_layer;
 static InverterLayer *inv_layer;
+static TextLayer *text_layer;
 
 static char* names[NUM_APPS];
 static char* descriptions[NUM_APPS];
@@ -42,6 +43,7 @@ static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tup
     case WEATHER_TYPE_KEY:
       APP_LOG(APP_LOG_LEVEL_INFO, "GOT WEATHER: %s", new_tuple->value->cstring);
       set_weather_type_text(new_tuple->value->cstring);
+
       break;
     case TEMPERATURE_KEY:
       APP_LOG(APP_LOG_LEVEL_INFO, "GOT TEMPERATURE: %s", new_tuple->value->cstring);
@@ -155,7 +157,7 @@ static void window_load(Window *window) {
   //-------
   //AppSync
   Tuplet initial_values[] = {
-    TupletInteger(WEATHER_KEY, (int8_t) 1),
+    TupletInteger(WEATHER_TYPE_KEY, (int8_t) 1),
     TupletInteger(TEMPERATURE_KEY, (int8_t) 1)
   };
   app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values, ARRAY_LENGTH(initial_values),
