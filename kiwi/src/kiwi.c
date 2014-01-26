@@ -6,7 +6,36 @@
 static Window *window;
 static MenuLayer *menu_layer;
 
+static AppSync sync;
+static uint8_t sync_buffer[32];
 
+enum MessageKey {
+  WEATHER_KEY = 0x0,         // TUPLE_INT
+  TEMPERATURE_KEY = 0x1,         // TUPLE_INT
+};
+
+
+//-----
+//AppSync
+
+static void sync_error_callback(DictionaryResult dict_error, AppMessageResult app_message_error, void *context) {
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "App Message Sync Error: %d", app_message_error);
+}
+
+
+static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tuple, const Tuple* old_tuple, void* context) {
+  switch (key) {
+    case WEATHER_KEY:
+      APP_LOG(APP_LOG_LEVEL_INFO, "GOT WEATHER: %d", new_tuple->value->int8);
+      break;
+    case TEMPERATURE_KEY:
+      APP_LOG(APP_LOG_LEVEL_INFO, "GOT TEMPERATURE: %d", new_tuple->value->int8);
+      break;
+  }
+}
+
+
+//-----
 
 static uint16_t menu_get_num_sections_callback(MenuLayer *menu_layer, void *data) {
   return 2;
@@ -18,7 +47,7 @@ static uint16_t menu_get_num_rows_callback(MenuLayer *menu_layer, uint16_t secti
       return 2;
 
     case 1:
-      return 2;
+      return 3;
 
     default:
       return 0;
@@ -74,6 +103,11 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
           // There is title draw for something more simple than a basic menu item
           menu_cell_basic_draw(ctx, cell_layer, "Sports", "What's the score doe?",NULL);
           break;
+
+        case 2:
+          // There is title draw for something more simple than a basic menu item
+          menu_cell_basic_draw(ctx, cell_layer, "Weather", "What's the weather doe?",NULL);
+          break;
       }
   }
 }
@@ -121,6 +155,16 @@ static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
+  //-------
+  //AppSync
+  Tuplet initial_values[] = {
+    TupletInteger(WEATHER_KEY, (int8_t) 1),
+    TupletInteger(TEMPERATURE_KEY, (int8_t) 1)
+  };
+  app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values, ARRAY_LENGTH(initial_values),
+      sync_tuple_changed_callback, sync_error_callback, NULL);
+  //-------
+
   menu_layer = menu_layer_create(bounds);
 
   menu_layer_set_callbacks(menu_layer,NULL, (MenuLayerCallbacks) {
@@ -139,9 +183,12 @@ static void window_load(Window *window) {
 }
 
 static void window_unload(Window *window) {
+  app_sync_deinit(&sync);
   menu_layer_destroy(menu_layer);
 }
 
+
+/*/---------
 //Messaging
 void out_sent_handler(DictionaryIterator *sent, void *context) {
   // outgoing message was delivered
@@ -161,16 +208,17 @@ void in_received_handler(DictionaryIterator *received, void *context) {
 void in_dropped_handler(AppMessageResult reason, void *context) {
   // incoming message dropped
 }
-//---------
+//---------*/
 
 static void init(void) {
   hashtag_init();
   sports_init();
+  weather_init();
 
-  app_message_register_inbox_received(in_received_handler);
+  /*app_message_register_inbox_received(in_received_handler);
   app_message_register_inbox_dropped(in_dropped_handler);
   app_message_register_outbox_sent(out_sent_handler);
-  app_message_register_outbox_failed(out_failed_handler);
+  app_message_register_outbox_failed(out_failed_handler);*/
 
   const uint32_t inbound_size = 64;
   const uint32_t outbound_size = 64;

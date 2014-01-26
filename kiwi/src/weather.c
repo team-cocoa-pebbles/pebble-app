@@ -1,7 +1,7 @@
 #include <pebble.h>
-#include "hashtag.h"
+#include "weather.h"
 
-static TextLayer* hashtag_text;
+static TextLayer* weather_text;
 static Window* window;
 static PropertyAnimation *prop_animation;
 static GRect bounds;
@@ -10,16 +10,16 @@ static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
   bounds = layer_get_bounds(window_layer);
 
-  hashtag_text = text_layer_create((GRect) {
+  weather_text = text_layer_create((GRect) {
         .origin = { 0, bounds.size.h/2},
         .size = { bounds.size.w, 20 }
       });
-  text_layer_set_text(hashtag_text, "#hashtag");
-  text_layer_set_text_alignment(hashtag_text, GTextAlignmentCenter);
-  layer_add_child(window_layer, text_layer_get_layer(hashtag_text));
+  text_layer_set_text(weather_text, "#weather");
+  text_layer_set_text_alignment(weather_text, GTextAlignmentCenter);
+  layer_add_child(window_layer, text_layer_get_layer(weather_text));
 
 
-  layer_add_child(window_layer, text_layer_get_layer(hashtag_text));
+  layer_add_child(window_layer, text_layer_get_layer(weather_text));
 }
 
 static void destroy_property_animation(PropertyAnimation **prop_animation) {
@@ -37,7 +37,7 @@ static void destroy_property_animation(PropertyAnimation **prop_animation) {
 
 
 static void click_handler(ClickRecognizerRef recognizer, Window *window) {
-  Layer *layer = text_layer_get_layer(hashtag_text);
+  Layer *layer = text_layer_get_layer(weather_text);
 
   GRect to_rect;
 
@@ -95,10 +95,10 @@ static void config_provider(Window *window) {
 
 
 static void window_unload(Window *window) {
-  text_layer_destroy(hashtag_text);
+  text_layer_destroy(weather_text);
 }
 
-void hashtag_init(void) {
+void weather_init(void) {
   window = window_create();
 
   window_set_click_config_provider(window, (ClickConfigProvider) config_provider);
@@ -110,10 +110,10 @@ void hashtag_init(void) {
   window_stack_push(window, animated);
 }
 
-void hashtag_deinit(void) {
+void weather_deinit(void) {
   window_destroy(window);
 }
 
-void hashtag_show(void) {
-	window_stack_push(window, true);
+void weather_show(void) {
+  window_stack_push(window, true);
 }
