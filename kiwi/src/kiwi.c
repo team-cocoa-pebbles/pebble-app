@@ -1,5 +1,7 @@
 #include <pebble.h>
+#include "sports.h"
 #include "hashtag.h"
+
 
 static Window *window;
 static MenuLayer *menu_layer;
@@ -96,8 +98,13 @@ void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *da
     switch (cell_index->row)
     {
       case 0:
+	APP_LOG(APP_LOG_LEVEL_INFO, "Hashtag");
         vibes_short_pulse();
         hashtag_show();
+        break;
+      case 1:
+	APP_LOG(APP_LOG_LEVEL_INFO, "Sports");
+        sports_show();
         break;
     }
     break;
@@ -138,6 +145,9 @@ static void init(void) {
     .load = window_load,
     .unload = window_unload,
   });
+
+  sports_init();
+
   const bool animated = true;
   window_stack_push(window, animated);
 }
