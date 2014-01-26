@@ -1,16 +1,19 @@
 #include <pebble.h>
-#include "traffic.h"
+#include "calendar.h"
 
 static Window* window;
 static PropertyAnimation *prop_animation;
 static GRect bounds;
 static Layer *cardLayer;
-static char* trafficText;
+static char* calendarNameText;
+static char* calendarDateText;
+static char* calendarLocationText;
 static int height = 84;
 
 static void cardLayer_update_callback(Layer* me, GContext* ctx) {
   graphics_context_set_text_color(ctx, GColorBlack);
-  graphics_draw_text(ctx,trafficText,fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21),
+  graphics_draw_line(ctx, GPoint(0, height), GPoint(bounds.size.w, height));
+  graphics_draw_text(ctx,"#calendar",fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21),
       GRect(0, height, bounds.size.w, 100),
       GTextOverflowModeWordWrap,
       GTextAlignmentCenter,
@@ -101,7 +104,7 @@ static void window_unload(Window *window) {
 
 }
 
-void traffic_init(void) {
+void calendar_init(void) {
   window = window_create();
   Layer* window_layer = window_get_root_layer(window);
   bounds = layer_get_bounds(window_layer);
@@ -116,7 +119,7 @@ void traffic_init(void) {
   });
 }
 
-void traffic_deinit(void) {
+void calendar_deinit(void) {
     window_destroy(window);
       layer_destroy(cardLayer);
   destroy_property_animation(&prop_animation);
@@ -124,11 +127,7 @@ void traffic_deinit(void) {
   window_stack_remove(window, false);
 }
 
-void traffic_show(void) {
-	window_stack_push(window, false);
-}
-
-void set_traffic_text(char* trafficInput) {
-  trafficText = trafficInput;
+void calendar_show(void) {
+  window_stack_push(window, false);
 }
 

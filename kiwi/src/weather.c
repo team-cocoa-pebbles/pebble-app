@@ -109,15 +109,9 @@ void weather_show(void) {
 }
 
 void set_weather_type_text(char * weatherInput) {
-  if (weatherInput != NULL)
     weatherText = weatherInput;
-  else
-    weatherText = "Loading...";
 }
 
 void set_temperature_text(char* temperatureInput) {
-  if (temperatureInput != NULL) 
     temperatureText = temperatureInput;
-  else
-    temperatureText = "??";
 }

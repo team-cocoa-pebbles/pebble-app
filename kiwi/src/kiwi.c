@@ -4,8 +4,11 @@
 #include "hashtag.h"
 #include "traffic.h"
 #include "weather.h"
+#include "quotes.h"
 
 #define NUM_APPS 4
+
+
 
 
 static Window *window;
@@ -74,7 +77,7 @@ static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tup
       strncpy(buf, new_tuple->value->cstring, len);
       set_quote_text(buf);
       break;
-    case CALENDAR_NAME_KEY:
+    /*case CALENDAR_NAME_KEY:
       APP_LOG(APP_LOG_LEVEL_INFO, "GOT CALENDAR EVENT NAME: %s", new_tuple->value->cstring);
       len = strlen(new_tuple->value->cstring) + 1;
       buf = malloc(len * sizeof(char));
@@ -94,7 +97,7 @@ static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tup
       buf = malloc(len * sizeof(char));
       strncpy(buf, new_tuple->value->cstring, len);
       set_calendar_location_text(buf);
-      break;
+      break;*/
     default:
       APP_LOG(APP_LOG_LEVEL_INFO, "Unknown Key Received: %" PRIu32, key);
       break;
