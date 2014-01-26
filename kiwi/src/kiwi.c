@@ -1,7 +1,7 @@
 #include <pebble.h>
 #include "sports.h"
 #include "hashtag.h"
-
+#include "weather.h"
 
 static Window *window;
 static MenuLayer *menu_layer;
@@ -106,6 +106,10 @@ void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *da
 	APP_LOG(APP_LOG_LEVEL_INFO, "Sports");
         sports_show();
         break;
+      case 2:
+	APP_LOG(APP_LOG_LEVEL_INFO, "Weather");
+        weather_show();
+        break;
     }
     break;
   }
@@ -138,15 +142,45 @@ static void window_unload(Window *window) {
 
 }
 
+//Messaging
+void out_sent_handler(DictionaryIterator *sent, void *context) {
+  // outgoing message was delivered
+}
+
+
+void out_failed_handler(DictionaryIterator *failed, AppMessageResult reason, void *context) {
+  // outgoing message failed
+}
+
+
+void in_received_handler(DictionaryIterator *received, void *context) {
+  // incoming message received
+}
+
+
+void in_dropped_handler(AppMessageResult reason, void *context) {
+  // incoming message dropped
+}
+//---------
+
 static void init(void) {
   hashtag_init();
+  sports_init();
+
+  app_message_register_inbox_received(in_received_handler);
+  app_message_register_inbox_dropped(in_dropped_handler);
+  app_message_register_outbox_sent(out_sent_handler);
+  app_message_register_outbox_failed(out_failed_handler);
+
+  const uint32_t inbound_size = 64;
+  const uint32_t outbound_size = 64;
+  app_message_open(inbound_size, outbound_size);
+
   window = window_create();
   window_set_window_handlers(window, (WindowHandlers) {
     .load = window_load,
     .unload = window_unload,
   });
-
-  sports_init();
 
   const bool animated = true;
   window_stack_push(window, animated);
