@@ -31,6 +31,8 @@ static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tup
     case TEMPERATURE_KEY:
       APP_LOG(APP_LOG_LEVEL_INFO, "GOT TEMPERATURE: %d", new_tuple->value->int8);
       break;
+    default:
+      APP_LOG(APP_LOG_LEVEL_INFO, "Unknown Key Received: %d", key);
   }
 }
 
@@ -230,6 +232,8 @@ static void init(void) {
     .unload = window_unload,
   });
 
+  const bool animated = true;
+  window_stack_push(window, animated);
 }
 
 static void deinit(void) {
