@@ -45,6 +45,7 @@ static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tup
       break;
     default:
       APP_LOG(APP_LOG_LEVEL_INFO, "Unknown Key Received: %d", key);
+      break;
   }
 }
 
