@@ -23,8 +23,8 @@ static AppSync sync;
 static uint8_t sync_buffer[32];
 
 enum MessageKey {
-  WEATHER_KEY = 0x0,         // TUPLE_INT
-  TEMPERATURE_KEY = 0x1,         // TUPLE_INT
+  WEATHER_KEY = 0x0,             // TUPLE_STRING
+  TEMPERATURE_KEY = 0x1,         // TUPLE_STRING
 };
 
 
@@ -39,10 +39,10 @@ static void sync_error_callback(DictionaryResult dict_error, AppMessageResult ap
 static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tuple, const Tuple* old_tuple, void* context) {
   switch (key) {
     case WEATHER_KEY:
-      APP_LOG(APP_LOG_LEVEL_INFO, "GOT WEATHER: %d", new_tuple->value->int8);
+      APP_LOG(APP_LOG_LEVEL_INFO, "GOT WEATHER: %d", new_tuple->value->cstring);
       break;
     case TEMPERATURE_KEY:
-      APP_LOG(APP_LOG_LEVEL_INFO, "GOT TEMPERATURE: %d", new_tuple->value->int8);
+      APP_LOG(APP_LOG_LEVEL_INFO, "GOT TEMPERATURE: %d", new_tuple->value->cstring);
       break;
     default:
       APP_LOG(APP_LOG_LEVEL_INFO, "Unknown Key Received: %" PRIu32, key);
