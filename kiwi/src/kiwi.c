@@ -2,8 +2,10 @@
 #include "sports.h"
 #include "hashtag.h"
 #include "traffic.h"
+#include "weather.h"
 
 #define NUM_APPS 4
+
 
 static Window *window;
 static MenuLayer *menu_layer;
@@ -16,7 +18,38 @@ static int bottom;
 static bool onTop;
 
 
+static AppSync sync;
+static uint8_t sync_buffer[32];
 
+enum MessageKey {
+  WEATHER_KEY = 0x0,         // TUPLE_INT
+  TEMPERATURE_KEY = 0x1,         // TUPLE_INT
+};
+
+
+//-----
+//AppSync
+
+static void sync_error_callback(DictionaryResult dict_error, AppMessageResult app_message_error, void *context) {
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "App Message Sync Error: %d", app_message_error);
+}
+
+
+static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tuple, const Tuple* old_tuple, void* context) {
+  switch (key) {
+    case WEATHER_KEY:
+      APP_LOG(APP_LOG_LEVEL_INFO, "GOT WEATHER: %d", new_tuple->value->int8);
+      break;
+    case TEMPERATURE_KEY:
+      APP_LOG(APP_LOG_LEVEL_INFO, "GOT TEMPERATURE: %d", new_tuple->value->int8);
+      break;
+    default:
+      APP_LOG(APP_LOG_LEVEL_INFO, "Unknown Key Received: %d", key);
+  }
+}
+
+
+//-----
 
 static uint16_t menu_get_num_sections_callback(MenuLayer *menu_layer, void *data) {
   return 1;
@@ -53,6 +86,7 @@ static void menu_draw_row_callback(GContext* ctx, const Layer *cell_layer, MenuI
       // This is a basic menu icon with a cycling icon
       menu_cell_basic_draw(ctx, cell_layer, names[bottom], descriptions[bottom], NULL);          
       break;
+
   }
 }
 
@@ -81,6 +115,10 @@ void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *da
 	APP_LOG(APP_LOG_LEVEL_INFO, "Sports");
         sports_show();
         break;
+      case 2:
+	APP_LOG(APP_LOG_LEVEL_INFO, "Weather");
+        weather_show();
+        break;
     }
 }
 
@@ -106,6 +144,16 @@ static void window_load(Window *window) {
   descriptions[2] = "#hashtag";
   descriptions[3] = "I go HARD in the paint";
 
+  //-------
+  //AppSync
+  Tuplet initial_values[] = {
+    TupletInteger(WEATHER_KEY, (int8_t) 1),
+    TupletInteger(TEMPERATURE_KEY, (int8_t) 1)
+  };
+  app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values, ARRAY_LENGTH(initial_values),
+      sync_tuple_changed_callback, sync_error_callback, NULL);
+  //-------
+
   menu_layer = menu_layer_create(bounds);
 
   menu_layer_set_callbacks(menu_layer,NULL, (MenuLayerCallbacks) {
@@ -127,8 +175,10 @@ static void window_load(Window *window) {
 }
 
 static void window_unload(Window *window) {
+  app_sync_deinit(&sync);
   menu_layer_destroy(menu_layer);
 }
+
 
 static void click_handler(ClickRecognizerRef recognizer, Window *window) {
   switch (click_recognizer_get_button_id(recognizer)) {
@@ -179,17 +229,52 @@ static void config_provider(Window *window) {
   window_single_click_subscribe(BUTTON_ID_DOWN, (ClickHandler) click_handler);
 }
 
+
+
+/*/---------
+//Messaging
+void out_sent_handler(DictionaryIterator *sent, void *context) {
+  // outgoing message was delivered
+}
+
+
+void out_failed_handler(DictionaryIterator *failed, AppMessageResult reason, void *context) {
+  // outgoing message failed
+}
+
+
+void in_received_handler(DictionaryIterator *received, void *context) {
+  // incoming message received
+}
+
+
+void in_dropped_handler(AppMessageResult reason, void *context) {
+  // incoming message dropped
+}
+//---------*/
+
 static void init(void) {
   hashtag_init();
+  sports_init();
+  weather_init();
   traffic_init();
+
+  /*app_message_register_inbox_received(in_received_handler);
+  app_message_register_inbox_dropped(in_dropped_handler);
+  app_message_register_outbox_sent(out_sent_handler);
+  app_message_register_outbox_failed(out_failed_handler);*/
+
+  const uint32_t inbound_size = 64;
+  const uint32_t outbound_size = 64;
+  app_message_open(inbound_size, outbound_size);
+
+
   window = window_create();
   window_set_click_config_provider(window, (ClickConfigProvider) config_provider);
   window_set_window_handlers(window, (WindowHandlers) {
     .load = window_load,
     .unload = window_unload,
   });
-
-  sports_init();
 
   const bool animated = true;
   window_stack_push(window, animated);
