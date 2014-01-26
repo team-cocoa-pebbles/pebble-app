@@ -1,24 +1,12 @@
 #include <pebble.h>
 #include "sports.h"
+#include "hashtag.h"
+
 
 static Window *window;
 static MenuLayer *menu_layer;
-static int i = 7;
 
 
-static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
-
-}
-
-static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
-
-
-
-}
-
-static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
-
-}
 
 static uint16_t menu_get_num_sections_callback(MenuLayer *menu_layer, void *data) {
   return 2;
@@ -112,6 +100,7 @@ void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *da
       case 0:
 	APP_LOG(APP_LOG_LEVEL_INFO, "Hashtag");
         vibes_short_pulse();
+        hashtag_show();
         break;
       case 1:
 	APP_LOG(APP_LOG_LEVEL_INFO, "Sports");
@@ -123,11 +112,6 @@ void menu_select_callback(MenuLayer *menu_layer, MenuIndex *cell_index, void *da
 }
 
 
-static void click_config_provider(void *context) {
-  window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
-  window_single_click_subscribe(BUTTON_ID_UP, up_click_handler);
-  window_single_click_subscribe(BUTTON_ID_DOWN, down_click_handler);
-}
 
 static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
@@ -155,8 +139,8 @@ static void window_unload(Window *window) {
 }
 
 static void init(void) {
+  hashtag_init();
   window = window_create();
-  window_set_click_config_provider(window, click_config_provider);
   window_set_window_handlers(window, (WindowHandlers) {
     .load = window_load,
     .unload = window_unload,
