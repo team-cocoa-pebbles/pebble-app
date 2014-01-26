@@ -1,5 +1,5 @@
 #include <pebble.h>
-#include "template.h"
+#include "card_template.h"
 
 int score;
 

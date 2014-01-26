@@ -139,7 +139,7 @@ static void window_load(Window *window) {
 }
 
 static void window_unload(Window *window) {
-
+  menu_layer_destroy(menu_layer);
 }
 
 //Messaging
