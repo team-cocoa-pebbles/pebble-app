@@ -23,7 +23,7 @@ static bool onTop;
 
 
 static AppSync sync;
-static uint8_t sync_buffer[32];
+static uint8_t sync_buffer[124];
 
 enum MessageKey {
   WEATHER_TYPE_KEY = 0x0,        // TUPLE_STRING

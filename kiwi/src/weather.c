@@ -24,8 +24,8 @@ static void cardLayer_update_callback(Layer* me, GContext* ctx) {
 }
 
 static void window_load(Window *window) {
-  weatherText = "Sunny";
-  temperatureText = "98.4";
+  //weatherText = "Sunny";
+  //temperatureText = "98.4";
   Layer *window_layer = window_get_root_layer(window);
   bounds = layer_get_bounds(window_layer);
 

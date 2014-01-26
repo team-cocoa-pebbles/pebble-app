@@ -18,7 +18,7 @@ static void cardLayer_update_callback(Layer* me, GContext* ctx) {
 }
 
 static void window_load(Window *window) {\
-  quoteText = "This is the default quote";
+  //quoteText = "This is the default quote";
   Layer *window_layer = window_get_root_layer(window);
   bounds = layer_get_bounds(window_layer);
 
