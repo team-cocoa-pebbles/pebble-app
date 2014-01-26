@@ -106,8 +106,6 @@ void weather_init(void) {
     .load = window_load,
     .unload = window_unload,
   });
-  const bool animated = true;
-  window_stack_push(window, animated);
 }
 
 void weather_deinit(void) {
