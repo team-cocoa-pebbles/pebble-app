@@ -25,7 +25,11 @@ static uint8_t sync_buffer[32];
 enum MessageKey {
   WEATHER_TYPE_KEY = 0x0,        // TUPLE_STRING
   TEMPERATURE_KEY = 0x1,         // TUPLE_STRING
-  TRAFFIC_KEY = 0x2              // TUPLE_... data?     
+  TRAFFIC_KEY = 0x2,              // TUPLE_STRING
+  QUOTE_KEY = 0x3,
+  CALENDAR_NAME_KEY = 0x4,
+  CALENDAR_DATE_KEY = 0x5,
+  CALENDAR_LOCATION_KEY = 0x6
 };
 
 
@@ -57,7 +61,39 @@ static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tup
       set_temperature_text(buf);
       break;
     case TRAFFIC_KEY:
-      APP_LOG(APP_LOG_LEVEL_INFO, "GOT TRAFFIC");
+      APP_LOG(APP_LOG_LEVEL_INFO, "GOT TRAFFIC: %s", new_tuple->value->cstring);
+      len = strlen(new_tuple->value->cstring) + 1;
+      buf = malloc(len * sizeof(char));
+      strncpy(buf, new_tuple->value->cstring, len);
+      set_traffic_text(buf);
+      break;
+    case QUOTE_KEY:
+      APP_LOG(APP_LOG_LEVEL_INFO, "GOT QUOTE: %s", new_tuple->value->cstring);
+      len = strlen(new_tuple->value->cstring) + 1;
+      buf = malloc(len * sizeof(char));
+      strncpy(buf, new_tuple->value->cstring, len);
+      set_quote_text(buf);
+      break;
+    case CALENDAR_NAME_KEY:
+      APP_LOG(APP_LOG_LEVEL_INFO, "GOT CALENDAR EVENT NAME: %s", new_tuple->value->cstring);
+      len = strlen(new_tuple->value->cstring) + 1;
+      buf = malloc(len * sizeof(char));
+      strncpy(buf, new_tuple->value->cstring, len);
+      set_calendar_name_text(buf);
+      break;
+    case CALENDAR_DATE_KEY:
+      APP_LOG(APP_LOG_LEVEL_INFO, "GOT CALENDAR EVENT DATE: %s", new_tuple->value->cstring);
+      len = strlen(new_tuple->value->cstring) + 1;
+      buf = malloc(len * sizeof(char));
+      strncpy(buf, new_tuple->value->cstring, len);
+      set_calendar_date_text(buf);
+      break;
+    case CALENDAR_LOCATION_KEY:
+      APP_LOG(APP_LOG_LEVEL_INFO, "GOT CALENDAR EVENT LOCATION: %s", new_tuple->value->cstring);
+      len = strlen(new_tuple->value->cstring) + 1;
+      buf = malloc(len * sizeof(char));
+      strncpy(buf, new_tuple->value->cstring, len);
+      set_calendar_location_text(buf);
       break;
     default:
       APP_LOG(APP_LOG_LEVEL_INFO, "Unknown Key Received: %" PRIu32, key);
