@@ -38,18 +38,21 @@ static void sync_error_callback(DictionaryResult dict_error, AppMessageResult ap
 
 
 static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tuple, const Tuple* old_tuple, void* context) {
+  int len;
+  char *buf;
+
   switch (key) {
     case WEATHER_TYPE_KEY:
       APP_LOG(APP_LOG_LEVEL_INFO, "GOT WEATHER: %s", new_tuple->value->cstring);
-      int len = strlen(new_tuple->value->cstring);
-      char *buf = malloc(sizeof(char) * len);
+      len = strlen(new_tuple->value->cstring) + 1;
+      buf = malloc(len * sizeof(char));
       strncpy(buf, new_tuple->value->cstring, len);
       set_weather_type_text(buf);
       break;
     case TEMPERATURE_KEY:
       APP_LOG(APP_LOG_LEVEL_INFO, "GOT TEMPERATURE: %s", new_tuple->value->cstring);
-      int len = strlen(new_tuple->value->cstring);
-      char *buf = malloc(sizeof(char) * len);
+      len = strlen(new_tuple->value->cstring) + 1;
+      buf = malloc(len * sizeof(char));
       strncpy(buf, new_tuple->value->cstring, len);
       set_temperature_text(buf);
       break;
@@ -161,7 +164,7 @@ static void window_load(Window *window) {
   //-------
   //AppSync
   Tuplet initial_values[] = {
-    TupletInteger(WEATHER_KEY, (int8_t) 1),
+    TupletInteger(WEATHER_TYPE_KEY, (int8_t) 1),
     TupletInteger(TEMPERATURE_KEY, (int8_t) 1)
   };
   app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values, ARRAY_LENGTH(initial_values),
